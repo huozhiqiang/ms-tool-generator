@@ -1,0 +1,165 @@
+package ${package}.rest;
+
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import ${package}.service.${className}Service;
+import ${package}.entity.${className};
+import ${package}.vo.${className}VO;
+import com.yss.ms.common.exception.BaseException;
+import com.yss.ms.common.msg.ObjectRestResponse;
+import com.yss.ms.common.msg.TableResultResponse;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import io.swagger.annotations.Api;
+import lombok.extern.slf4j.Slf4j;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * ${comments}
+ *
+ * @author ${author}
+ * @since ${datetime}
+ */
+
+@RestController
+@RequestMapping("${secondModuleName}")
+@Api(description="${comments}接口")
+@Slf4j
+public class ${className}Controller {
+
+    @Autowired
+    private ${className}Service ${classname}Service;
+
+    /**
+     * 新增
+     *
+     * @author ${author} ${datetime}
+     * */
+    @ApiOperation(value="新增")
+    @PostMapping(value = "",produces = MediaType.APPLICATION_JSON_VALUE )
+    @ResponseBody
+    @HystrixCommand(fallbackMethod = "addError",ignoreExceptions = {BaseException.class})
+    public ObjectRestResponse<${className}> add(@RequestBody ${className} ${classname}) throws BaseException{
+        ${classname}Service.add(${classname});
+        return new ObjectRestResponse<${className}>().rel(true);
+    }
+
+    /**
+     * 新增异常方法
+     *
+     * @author ${author} ${datetime}
+     */
+    public ObjectRestResponse<String> addError(@RequestBody @Validated ${className} ${classname}, Throwable throwable) throws BaseException{
+        log.error("进入回退方法，异常："+ throwable);
+        throw new BaseException("${classname} add method error fallback",500);
+    }
+
+    /**
+     * 删除
+     *
+     * @author ${author} ${datetime}
+     * */
+    @ApiOperation(value="删除")
+    @DeleteMapping(path = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @HystrixCommand(fallbackMethod = "deleteByIdError",ignoreExceptions = {BaseException.class})
+    public ObjectRestResponse<${className}> deleteById(@PathVariable int id) throws BaseException {
+        ${classname}Service.deleteById(id);
+        return new ObjectRestResponse<${className}>().rel(true);
+    }
+
+    /**
+     * 删除异常方法
+     *
+     * @author ${author} ${datetime}
+     */
+    public ObjectRestResponse<${className}> deleteByIdError(@PathVariable int id, Throwable throwable)throws BaseException {
+        log.error("进入回退方法，异常："+ throwable);
+        throw new BaseException("${classname} delete method error fallback",500);
+    }
+
+    /**
+     * 更新
+     *
+     * @author ${author} ${datetime}
+     * */
+    @ApiOperation(value="更新")
+    @PutMapping(value = "")
+    public ObjectRestResponse<${className}> update(@RequestBody @Validated ${className} ${classname}) throws BaseException{
+        ${classname}Service.update(${classname});
+        return new ObjectRestResponse<${className}>().rel(true);
+    }
+
+    /**
+     * 审核/复核
+     *
+     * @author ${author} ${datetime}
+     * */
+    @ApiOperation(value="审核/复核")
+    @PutMapping(value = "/status")
+    @ResponseBody
+    @HystrixCommand(fallbackMethod = "updateCheckedError",ignoreExceptions = {BaseException.class})
+    public ObjectRestResponse<${className}> updateChecked(@RequestParam List<Integer> list,@RequestParam Integer status)throws BaseException{
+        ${classname}Service.updateChecked(list, status);
+        return new ObjectRestResponse<${className}>().rel(true);
+    }
+
+    /**
+     * 审核/复核异常方法
+     * @Author: HuoZhiQiang
+     * @Date: 2018/1/16 17:28
+     */
+    public ObjectRestResponse<${className}> updateCheckedError(@RequestParam List<Integer> list,@RequestParam Integer status, Throwable throwable)throws BaseException{
+        log.error("进入回退方法，异常："+ throwable);
+        throw new BaseException("${classname} updateChecked method error fallback",500);
+    }
+
+
+    /**
+     * 查询(根据主键)
+     *
+     * @author ${author} ${datetime}
+     * */
+    @ApiOperation(value="查询(根据主键)", notes="")
+    @GetMapping(path = "/{fid}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ObjectRestResponse<${className}> findById(@PathVariable Integer id) throws BaseException {
+        return new ObjectRestResponse<${className}>().rel(true).data(${classname}Service.findById(id));
+    }
+
+
+    /**
+     * 条件查询
+     *
+     * @author ${author} ${datetime}
+     * */
+    @ApiOperation(value = "条件查询")
+    @GetMapping(path = "",produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @HystrixCommand(fallbackMethod = "selectByConditionError",ignoreExceptions = {BaseException.class})
+    public TableResultResponse<${className}VO> selectByCondition(@RequestParam Map<String, Object> params) throws BaseException{
+        Map<String, Object> map = ${classname}Service.findByList(params);
+        if(map == null){
+            return new TableResultResponse(0, null);
+        }
+        return new TableResultResponse(Long.parseLong(map.get("total").toString()), (List<${className}VO>)map.get("voList"));
+    }
+
+    /**
+     * 条件查询异常方法
+     *
+     * @author ${author} ${datetime}
+     */
+    public TableResultResponse<${className}VO> selectByConditionError(@RequestParam Map<String, Object> params, Throwable throwable)throws BaseException{
+        log.error("进入回退方法，异常："+ throwable);
+        throw new BaseException("${classname} selectByCondition method error fallback",500);
+    }
+
+
+}
