@@ -28,7 +28,7 @@ import java.util.zip.ZipOutputStream;
  */
 public class GeneratorUtils {
 
-    public static List<String> getTemplates() {
+    static List<String> getTemplates() {
         List<String> templates = new ArrayList<String>();
         templates.add("template/index.js.vm");
         templates.add("template/index.vue.vm");
@@ -165,7 +165,7 @@ public class GeneratorUtils {
     /**
      * 获取文件名
      */
-    public static String getFileName(String template, String className, String packageName, String moduleName) {
+    static String getFileName(String template, String className, String packageName, String moduleName) {
         String packagePath = "src"+ File.separator + "main" + File.separator + "java" + File.separator;
         String frontPath = "ui" + File.separator;
         if (StringUtils.isNotBlank(packageName)) {
