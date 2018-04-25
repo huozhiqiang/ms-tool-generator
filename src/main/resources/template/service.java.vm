@@ -1,0 +1,139 @@
+package ${package}.biz;
+
+import com.yss.ms.api.business.plan.PlanPlaninfoInfo;
+import com.yss.ms.api.business.plan.PlanUnifiedplanInfo;
+import ${package}.biz.${className}Biz;
+import ${package}.vo.${className}VO;
+import com.yss.ms.common.exception.BaseException;
+import com.yss.ms.feign.FeignStatusService;
+import com.yss.ms.feign.FeignPlanService;
+import com.yss.ms.api.business.status.StatusDataStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ${package}.entity.${className};
+import org.springframework.beans.BeanUtils;
+
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * ${comments}Service
+ *
+ * @author ${author}
+ * @since ${datetime}
+ */
+@Service
+public class ${className}Service {
+
+    @Autowired
+    private ${className}Biz ${classname}Biz;
+
+    @Autowired
+    private FeignStatusService feignStatusService;
+
+    @Autowired
+    private FeignPlanService feignPlanService;
+
+    /**
+     * 新增
+     *
+     * @author ${author} ${datetime}
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void add(${className} ${classname})throws BaseException {
+        ${classname}Biz.bizInsertSelective(${classname});
+        StatusDataStatus statusDataStatus = new StatusDataStatus();
+        statusDataStatus.setFtableId(${classname}.getId());
+        statusDataStatus.setTableName("${tableName}");
+        feignStatusService.add(statusDataStatus);
+    }
+
+    /**
+     * 删除
+     *
+     * @author ${author} ${datetime}
+     */
+    @Transactional(rollbackFor = BaseException.class)
+    public void deleteById(int id)throws BaseException {
+        ${classname}Biz.bizLogicDeleteById(id);
+        feignStatusService.remove("${tableName}", id);
+    }
+
+    /**
+     * 更新
+     *
+     * @author ${author} ${datetime}
+     */
+    @Transactional(rollbackFor = BaseException.class)
+    public void update(${className} ${classname})throws BaseException{
+        if(${classname}.getOperationMode() == 0){
+            ${classname}.setUnifiedplanFid(0);
+        }else {
+            ${classname}.setPlanFid(0);
+        }
+        ${classname}Biz.bizUpdateSelectiveById(${classname});
+    }
+
+    /**
+     * 审核/复核
+     *
+     * @author ${author} ${datetime}
+     */
+    @Transactional(rollbackFor = BaseException.class)
+    public void updateChecked(List<Integer> list, Integer status)throws BaseException{
+        ${classname}Biz.updateChecked(list,status);
+        feignStatusService.addList(list, "${tableName}", status);
+    }
+
+    /**
+     * 根据主键查询
+     *
+     * @author ${author} ${datetime}
+     */
+    public ${className}VO findById(Integer id)throws BaseException {
+        ${className} ${classname} = ${classname}Biz.bizSelectById(id);
+        ${className}VO ${classname}VO = new ${className}VO();
+        BeanUtils.copyProperties(${classname},${classname}VO);
+        List<Integer> list = new ArrayList<>();
+        if(${classname}.getUnifiedplanFid() != 0){
+            list.add(${classname}.getUnifiedplanFid());
+            PlanUnifiedplanInfo unifiedplanInfo = feignPlanService.selectCondition(list).get(0);
+            ${classname}VO.setUnifiedPlanlicId(unifiedplanInfo.getFunifiedPlanlicId());
+            ${classname}VO.setUnifiedPlanName(unifiedplanInfo.getFunifiedPlanName());
+        }
+        if(${classname}.getPlanFid() != 0){
+            list.clear();
+            list.add(${classname}.getPlanFid());
+            PlanPlaninfoInfo planinfoInfo = feignPlanService.selectByCondition(list).get(0);
+            ${classname}VO.setPlanlicId(planinfoInfo.getFplanlicId());
+            ${classname}VO.setPlanName(planinfoInfo.getFplanName());
+        }
+        return ${classname}VO;
+    }
+
+    /**
+     * 条件查询
+     *
+     * @author ${author} ${datetime}
+     */
+    public Map<String,Object> findByList(Map<String, Object> params)throws BaseException{
+        Map<String,Object> map = ${classname}Biz.selectByQuery(params);
+        if (map == null){
+            return null;
+        }
+        List<${className}VO> voList = new ArrayList<>();
+        if(map.get("planFidList") != null && !("0").equals(map.get("planFidList").toString())){
+            List<PlanPlaninfoInfo> planList = feignPlanService.selectByCondition((List<Integer>) map.get("planFidList"));
+            ${classname}Biz.planListInfo(planList, voList);
+        }
+        if (map.get("unPlanFidList") != null && !("0").equals(map.get("unPlanFidList").toString())){
+            List<PlanUnifiedplanInfo> unPlanList = feignPlanService.selectCondition((List<Integer>) map.get("unPlanFidList"));
+            ${classname}Biz.listUnPlanInfo(unPlanList,voList);
+        }
+        map.put("voList", voList);
+        return map;
+    }
+
+}
