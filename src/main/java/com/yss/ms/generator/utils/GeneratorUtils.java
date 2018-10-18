@@ -31,13 +31,11 @@ public class GeneratorUtils {
         List<String> templates = new ArrayList<String>();
         templates.add("template/index.js.vm");
         templates.add("template/index.vue.vm");
-        templates.add("template/mapper.xml.vm");
-        templates.add("template/biz.java.vm");
         templates.add("template/entity.java.vm");
-        templates.add("template/mapper.java.vm");
         templates.add("template/controller.java.vm");
         templates.add("template/vo.java.vm");
         templates.add("template/service.java.vm");
+        templates.add("template/repository.java.vm");
         return templates;
     }
 
@@ -179,26 +177,20 @@ public class GeneratorUtils {
             return frontPath + "views" + File.separator + moduleName + File.separator + toLowerCaseFirstOne(className) + File.separator + "index.vue";
         }
 
-        if (template.contains("biz.java.vm")) {
-            return packagePath + "biz" + File.separator + className + "Biz.java";
-        }
-        if (template.contains("mapper.java.vm")) {
-            return packagePath + "mapper" + File.separator + className + "Mapper.java";
-        }
         if (template.contains("entity.java.vm")) {
-            return packagePath + "entity" + File.separator + className + ".java";
+            return packagePath + "entity" + File.separator + className + "Entity.java";
         }
         if (template.contains("controller.java.vm")) {
-            return packagePath + "rest" + File.separator + className + "Controller.java";
-        }
-        if (template.contains("mapper.xml.vm")) {
-            return "src"+ File.separator + "main" + File.separator + "resources" + File.separator + "mapper" + File.separator + className + "Mapper.xml";
+            return packagePath + "controller" + File.separator + className + "Controller.java";
         }
         if (template.contains("vo.java.vm")) {
             return packagePath + "vo" + File.separator + className + "VO.java";
         }
         if (template.contains("service.java.vm")) {
             return packagePath + "service" + File.separator + className + "Service.java";
+        }
+        if (template.contains("repository.java.vm")) {
+            return packagePath + "repository" + File.separator + className + "Repository.java";
         }
 
         return null;

@@ -1,0 +1,17 @@
+package ${package}.repository;
+
+import com.kb.domain.salary.result.HbSevenSalaryDetailEntiry;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.io.Serializable;
+
+/**
+ * ${comments}
+ *
+ * @Author: ${author}
+ * @Date: ${datetime}
+ */
+@Component
+public interface ${className}Repository extends JpaRepository<${className}Entity, Serializable> {
+
+}
