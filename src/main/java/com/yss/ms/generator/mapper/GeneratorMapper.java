@@ -6,9 +6,8 @@ import java.util.Map;
 /**
  * 代码生成器
  *
- * @author Mr.AG
- * @email 463540703@qq.com
- * @date 2017年08月25日
+ * @Author: ${author}
+ * @Date: ${datetime}
  */
 public interface GeneratorMapper {
 	

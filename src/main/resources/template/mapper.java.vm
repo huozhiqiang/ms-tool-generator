@@ -10,8 +10,8 @@ import java.util.List;
 /**
  * ${comments}
  *
- * @author ${author}
- * @since ${datetime}
+ * @Author: ${author}
+ * @Date: ${datetime}
  */
 @Component
 public interface ${className}Mapper extends BizMapper<${className}> {

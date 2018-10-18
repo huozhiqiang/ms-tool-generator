@@ -23,8 +23,8 @@ import java.util.Map;
 /**
  * ${comments}Biz
  *
- * @author ${author}
- * @since ${datetime}
+ * @Author: ${author}
+ * @Date: ${datetime}
  */
 @Service
 public class ${className}Biz extends BusinessBiz<${className}Mapper,${className}> {
@@ -35,7 +35,7 @@ public class ${className}Biz extends BusinessBiz<${className}Mapper,${className}
     /**
      * 条件查询
      *
-     * @author ${author} ${datetime}
+     * @Author: ${author} ${datetime}
      */
     public Map<String,Object> selectByQuery(Map<String, Object> params) {
         Map<String, Object> map = new HashMap<>(100);
@@ -68,7 +68,7 @@ public class ${className}Biz extends BusinessBiz<${className}Mapper,${className}
      * 提出的公共方法
      * 把实体集合转换成VO集合
      * 
-     * @author ${author} ${datetime}
+     * @Author: ${author} ${datetime}
      */
     private Map<String,Object> list${className}VO(List<${className}> list){
         Map<String, Object> map = new HashMap<>();
@@ -94,7 +94,7 @@ public class ${className}Biz extends BusinessBiz<${className}Mapper,${className}
     /**
      * vo中插入计划代码和名称
      *
-     * @author ${author} ${datetime}
+     * @Author: ${author} ${datetime}
      */
     public List<${className}VO> planListInfo(List<PlanPlaninfoInfo> planList, List<${className}VO> voList){
         for (int i = 0 ;i < voList.size(); i++ ) {
@@ -107,7 +107,7 @@ public class ${className}Biz extends BusinessBiz<${className}Mapper,${className}
     /**
      * vo中插入统一计划代码和名称
      *
-     * @author ${author} ${datetime}
+     * @Author: ${author} ${datetime}
      */
     public List<${className}VO> listUnPlanInfo(List<PlanUnifiedplanInfo> unPlanList, List<${className}VO> voList){
         for (int i = 0 ;i < voList.size(); i++ ) {

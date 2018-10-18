@@ -22,9 +22,8 @@ import java.util.zip.ZipOutputStream;
 /**
  * 代码生成器   工具类
  *
- * @author chenshun
- * @email sunlightcs@gmail.com
- * @date 2016年12月19日 下午11:40:24
+ * @Author: ${author}
+ * @Date: ${datetime}
  */
 public class GeneratorUtils {
 
@@ -69,7 +68,7 @@ public class GeneratorUtils {
             columnEntity.setExtra(column.get("extra"));
 
             //列名转换成Java属性名
-            String attrName = columnToJava(columnEntity.getColumnName().substring(1,columnEntity.getColumnName().length()));
+            String attrName = columnToJava(columnEntity.getColumnName());
             columnEntity.setAttrName(attrName);
             columnEntity.setAttrname(StringUtils.uncapitalize(attrName));
 
@@ -206,11 +205,18 @@ public class GeneratorUtils {
     }
 
     //首字母转小写
-    public static String toLowerCaseFirstOne(String s) {
+    static String toLowerCaseFirstOne(String s) {
         if (Character.isLowerCase(s.charAt(0))) {
             return s;
         } else {
             return (new StringBuilder()).append(Character.toLowerCase(s.charAt(0))).append(s.substring(1)).toString();
         }
+    }
+
+
+    public static Long generateSerialVersionUID(){
+
+
+        return 0L;
     }
 }

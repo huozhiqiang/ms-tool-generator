@@ -3,6 +3,7 @@ package ${package}.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -13,11 +14,13 @@ import java.math.BigDecimal;
 /**
  * ${comments}
  *
- * @author ${author}
- * @since ${datetime}
+ * @Author: ${author}
+ * @Date: ${datetime}
  */
+@Data
 @ApiModel(value="${comments}参数", description = "${comments}参数描述")
 public class ${className}VO implements Serializable{
+
 	private static final long serialVersionUID = 1L;
 	
 #foreach ($column in $columns)
@@ -43,22 +46,22 @@ public class ${className}VO implements Serializable{
 
 #end
 
-#foreach ($column in $columns)
-
-	/**
-	 * 设置：${column.comments}
-	 */
-	public void set${column.attrName}($column.attrType $column.attrname) {
-		this.$column.attrname = $column.attrname;
-	}
-
-	/**
-	 * 获取：${column.comments}
-	 */
-	public $column.attrType get${column.attrName}() {
-		return $column.attrname;
-	}
-#end
+###foreach ($column in $columns)
+##
+##	/**
+##	 * 设置：${column.comments}
+##	 */
+##	public void set${column.attrName}($column.attrType $column.attrname) {
+##		this.$column.attrname = $column.attrname;
+##	}
+##
+##	/**
+##	 * 获取：${column.comments}
+##	 */
+##	public $column.attrType get${column.attrName}() {
+##		return $column.attrname;
+##	}
+###end
 
 
 }
