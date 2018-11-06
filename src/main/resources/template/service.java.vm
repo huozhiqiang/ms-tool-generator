@@ -1,18 +1,25 @@
-package ${package}.biz;
+package ${package}.service;
 
-import com.yss.ms.api.business.plan.PlanPlaninfoInfo;
-import com.yss.ms.api.business.plan.PlanUnifiedplanInfo;
-import ${package}.biz.${className}Biz;
-import ${package}.vo.${className}VO;
+import com.kb.entity.${className}Entity;
+import com.kb.exception.ErrorException;
+import com.kb.repository.${className}Repository;
+import com.kb.utils.DateUtils;
+import com.kb.utils.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ${package}.entity.${className};
-import org.springframework.beans.BeanUtils;
+import org.springframework.util.StringUtils;
 
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.*;
 
 /**
  * ${comments}Service
@@ -50,14 +57,18 @@ public class ${className}Service {
     }
 
     /**
-     * 更新
+     * 修改
      *
      * @Author: ${author}
      * @Date: ${datetime}
      */
     @Transactional(rollbackFor = ErrorException.class)
     public void update(${className}Entity ${classname}Entity)throws ErrorException{
-        ${classname}Repository.save(${classname}Entity);
+        ${className}Entity entity = ${classname}Repository.findById(${classname}Entity.getId());
+        entity.setUpdateTime(new Date());
+        //因jpa的saveAndFlush会赋值null值，所以调用该方法赋值非空值
+        EntityUtils.copyPropertiesIgnoreNull(${classname}Entity, entity);
+        ${classname}Repository.saveAndFlush(entity);
     }
 
     /**
@@ -67,9 +78,7 @@ public class ${className}Service {
      * @Date: ${datetime}
      */
     public ${className}Entity findById(String id)throws ErrorException {
-        ${className}Entity ${classname}Entity = ${classname}Repository.getOne(id);
-
-        return ${classname}Entity;
+        return ${classname}Repository.findById(id);
     }
 
     /**
@@ -78,9 +87,43 @@ public class ${className}Service {
      * @Author: ${author}
      * @Date: ${datetime}
      */
-    public Map<String,Object> selectByCondition(Map<String, Object> params)throws ErrorException{
+    public Map<String,Object> selectByCondition(Integer page, Integer pageSize, String --, String --, String --)throws ErrorException{
+        Specification<${className}Entity> querySpecification = new Specification<${className}Entity>() {
+            private static final long serialVersionUID = 1L;
 
-        return null;
+            @Override
+            public Predicate toPredicate(Root<${className}Entity> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> predicates = new ArrayList<>();
+                //
+                if (!StringUtils.isEmpty(--)) {
+                    predicates.add(criteriaBuilder.equal(root.get("--"), --));
+                }
+                //
+                if (!StringUtils.isEmpty(--)) {
+                    predicates.add(criteriaBuilder.like(root.get("--").as(String.class), "%" + -- + "%"));
+                }
+                //--时间
+                if (!StringUtils.isEmpty(--)) {
+                    //大于等于
+                    predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("--"), DateUtils.YmdByObject(--)));
+                    //小于等于
+                    predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("--"), DateUtils.YmdByObject(--)));
+                }
+                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        Pageable pageable = new PageRequest(page - 1, pageSize, sort);
+
+        Page<${className}Entity> entityPage = ${classname}Repository.findAll(querySpecification, pageable);
+        Map<String, Object> map = new HashMap<>();
+        List<${className}Entity> list = new ArrayList<>();
+        for (${className}Entity entity : entityPage) {
+            list.add(entity);
+        }
+        map.put("list", list);
+        map.put("total", entityPage.getTotalElements());
+        return map;
     }
 
 }

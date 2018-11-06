@@ -47,6 +47,7 @@ public class ${className}Entity implements Serializable {
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 #end
     @Column(name = "$column.columnName")
+##    @Field(value = "$column.columnName")
     @ApiModelProperty(value="$column.comments")
     private $column.attrType $column.attrname;
 	#end

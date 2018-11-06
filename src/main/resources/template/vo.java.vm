@@ -30,7 +30,7 @@ public class ${className}VO implements Serializable{
      * $column.comments
      */
     @Id
-    @ApiModelProperty(value="$column.comments", required = true)
+    @ApiModelProperty(value="$column.comments")
     private $column.attrType $column.attrname;
 	#else
 
@@ -40,7 +40,7 @@ public class ${className}VO implements Serializable{
 #if($column.attrType == "Date")
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 #end
-    @ApiModelProperty(value="$column.comments", required = true)
+    @ApiModelProperty(value="$column.comments")
     private $column.attrType $column.attrname;
 	#end
 

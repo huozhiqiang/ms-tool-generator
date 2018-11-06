@@ -54,12 +54,12 @@ public class ${className}Controller {
     }
 
     /**
-     * 更新
+     * 修改
      *
      * @Author: ${author}
      * @Date: ${datetime}
      */
-    @ApiOperation(value = "更新")
+    @ApiOperation(value = "修改")
     @PutMapping(value = "")
     public ObjectResponse<${className}Entity> update(@RequestBody ${className}Entity ${classname}Entity) throws ErrorException{
         ${classname}Service.update(${classname}Entity);
@@ -72,7 +72,7 @@ public class ${className}Controller {
      * @Author: ${author}
      * @Date: ${datetime}
      */
-    @ApiOperation(value = "查询(根据主键)", notes="")
+    @ApiOperation(value = "查询(根据主键)")
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ObjectResponse<${className}Entity> findById(@PathVariable String id) throws ErrorException {
         return new ObjectResponse<>(${classname}Service.findById(id));
@@ -87,8 +87,9 @@ public class ${className}Controller {
      */
     @ApiOperation(value = "条件查询")
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ListResponse<${className}Entity> selectByCondition(@RequestParam Map<String, Object> params) throws ErrorException{
-        Map<String, Object> map = ${classname}Service.selectByCondition(params);
+    public ListResponse<${className}Entity> selectByCondition(@RequestParam Integer page, @RequestParam Integer pageSize,
+                                                              @RequestParam(required = false) String --, @RequestParam(required = false) String --, @RequestParam(required = false) String --) throws ErrorException{
+        Map<String, Object> map = ${classname}Service.selectByCondition(page, pageSize, --, --, --);
         if(map == null){
             return new ListResponse<>(0, null);
         }
