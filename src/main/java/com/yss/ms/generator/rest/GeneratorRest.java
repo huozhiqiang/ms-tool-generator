@@ -3,8 +3,6 @@ package com.yss.ms.generator.rest;
 import com.alibaba.fastjson.JSON;
 import com.yss.ms.common.msg.TableResultResponse;
 import com.yss.ms.generator.service.GeneratorService;
-import com.yss.ms.generator.utils.GeneratorUtils;
-import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

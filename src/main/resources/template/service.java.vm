@@ -1,8 +1,8 @@
-package ${package}.service;
+package
 
 import com.kb.entity.${className}Entity;
 import com.kb.exception.ErrorException;
-import com.kb.repository.${className}Repository;
+        import com.kb.repository.${className}Repository;
 import com.kb.utils.DateUtils;
 import com.kb.utils.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
@@ -20,6 +19,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.*;
+
+${package}.service;
 
 /**
  * ${comments}Service
