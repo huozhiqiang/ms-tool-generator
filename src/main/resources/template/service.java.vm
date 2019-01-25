@@ -1,22 +1,26 @@
-package ${package}.biz;
+package
 
-import com.yss.ms.api.business.plan.PlanPlaninfoInfo;
-import com.yss.ms.api.business.plan.PlanUnifiedplanInfo;
-import ${package}.biz.${className}Biz;
-import ${package}.vo.${className}VO;
-import com.yss.ms.common.exception.BaseException;
-import com.yss.ms.feign.FeignStatusService;
-import com.yss.ms.feign.FeignPlanService;
-import com.yss.ms.api.business.status.StatusDataStatus;
+import com.kb.entity.${className}Entity;
+import com.kb.exception.ErrorException;
+        import com.kb.repository.${className}Repository;
+import com.kb.utils.DateUtils;
+import com.kb.utils.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
-import ${package}.entity.${className};
-import org.springframework.beans.BeanUtils;
+import org.springframework.util.StringUtils;
 
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.*;
+
+${package}.service;
 
 /**
  * ${comments}Service
@@ -28,111 +32,98 @@ import java.util.List;
 public class ${className}Service {
 
     @Autowired
-    private ${className}Biz ${classname}Biz;
-
-    @Autowired
-    private FeignStatusService feignStatusService;
-
-    @Autowired
-    private FeignPlanService feignPlanService;
+    private ${className}Repository ${classname}Repository;
 
     /**
      * 新增
      *
-     * @Author: ${author} ${datetime}
+     * @Author: ${author}
+     * @Date: ${datetime}
      */
-    @Transactional(rollbackFor = Exception.class)
-    public void add(${className} ${classname})throws BaseException {
-        ${classname}Biz.bizInsertSelective(${classname});
-        StatusDataStatus statusDataStatus = new StatusDataStatus();
-        statusDataStatus.setFtableId(${classname}.getId());
-        statusDataStatus.setTableName("${tableName}");
-        feignStatusService.add(statusDataStatus);
+    @Transactional(rollbackFor = ErrorException.class)
+    public void add(${className}Entity ${classname}Entity)throws ErrorException {
+        ${classname}Entity.setCreateTime(new Date());
+        ${classname}Repository.save(${classname}Entity);
     }
 
     /**
      * 删除
      *
-     * @Author: ${author} ${datetime}
+     * @Author: ${author}
+     * @Date: ${datetime}
      */
-    @Transactional(rollbackFor = BaseException.class)
-    public void deleteById(int id)throws BaseException {
-        ${classname}Biz.bizLogicDeleteById(id);
-        feignStatusService.remove("${tableName}", id);
+    @Transactional(rollbackFor = ErrorException.class)
+    public void deleteById(String id)throws ErrorException {
+        ${classname}Repository.deleteById(id);
     }
 
     /**
-     * 更新
+     * 修改
      *
-     * @Author: ${author} ${datetime}
+     * @Author: ${author}
+     * @Date: ${datetime}
      */
-    @Transactional(rollbackFor = BaseException.class)
-    public void update(${className} ${classname})throws BaseException{
-        if(${classname}.getOperationMode() == 0){
-            ${classname}.setUnifiedplanFid(0);
-        }else {
-            ${classname}.setPlanFid(0);
-        }
-        ${classname}Biz.bizUpdateSelectiveById(${classname});
-    }
-
-    /**
-     * 审核/复核
-     *
-     * @Author: ${author} ${datetime}
-     */
-    @Transactional(rollbackFor = BaseException.class)
-    public void updateChecked(List<Integer> list, Integer status)throws BaseException{
-        ${classname}Biz.updateChecked(list,status);
-        feignStatusService.addList(list, "${tableName}", status);
+    @Transactional(rollbackFor = ErrorException.class)
+    public void update(${className}Entity ${classname}Entity)throws ErrorException{
+        ${className}Entity entity = ${classname}Repository.findById(${classname}Entity.getId());
+        entity.setUpdateTime(new Date());
+        //因jpa的saveAndFlush会赋值null值，所以调用该方法赋值非空值
+        EntityUtils.copyPropertiesIgnoreNull(${classname}Entity, entity);
+        ${classname}Repository.saveAndFlush(entity);
     }
 
     /**
      * 根据主键查询
      *
-     * @Author: ${author} ${datetime}
+     * @Author: ${author}
+     * @Date: ${datetime}
      */
-    public ${className}VO findById(Integer id)throws BaseException {
-        ${className} ${classname} = ${classname}Biz.bizSelectById(id);
-        ${className}VO ${classname}VO = new ${className}VO();
-        BeanUtils.copyProperties(${classname},${classname}VO);
-        List<Integer> list = new ArrayList<>();
-        if(${classname}.getUnifiedplanFid() != 0){
-            list.add(${classname}.getUnifiedplanFid());
-            PlanUnifiedplanInfo unifiedplanInfo = feignPlanService.selectCondition(list).get(0);
-            ${classname}VO.setUnifiedPlanlicId(unifiedplanInfo.getFunifiedPlanlicId());
-            ${classname}VO.setUnifiedPlanName(unifiedplanInfo.getFunifiedPlanName());
-        }
-        if(${classname}.getPlanFid() != 0){
-            list.clear();
-            list.add(${classname}.getPlanFid());
-            PlanPlaninfoInfo planinfoInfo = feignPlanService.selectByCondition(list).get(0);
-            ${classname}VO.setPlanlicId(planinfoInfo.getFplanlicId());
-            ${classname}VO.setPlanName(planinfoInfo.getFplanName());
-        }
-        return ${classname}VO;
+    public ${className}Entity findById(String id)throws ErrorException {
+        return ${classname}Repository.findById(id);
     }
 
     /**
      * 条件查询
      *
-     * @Author: ${author} ${datetime}
+     * @Author: ${author}
+     * @Date: ${datetime}
      */
-    public Map<String,Object> findByList(Map<String, Object> params)throws BaseException{
-        Map<String,Object> map = ${classname}Biz.selectByQuery(params);
-        if (map == null){
-            return null;
+    public Map<String,Object> selectByCondition(Integer page, Integer pageSize, String --, String --, String --)throws ErrorException{
+        Specification<${className}Entity> querySpecification = new Specification<${className}Entity>() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public Predicate toPredicate(Root<${className}Entity> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> predicates = new ArrayList<>();
+                //
+                if (!StringUtils.isEmpty(--)) {
+                    predicates.add(criteriaBuilder.equal(root.get("--"), --));
+                }
+                //
+                if (!StringUtils.isEmpty(--)) {
+                    predicates.add(criteriaBuilder.like(root.get("--").as(String.class), "%" + -- + "%"));
+                }
+                //--时间
+                if (!StringUtils.isEmpty(--)) {
+                    //大于等于
+                    predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("--"), DateUtils.YmdByObject(--)));
+                    //小于等于
+                    predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("--"), DateUtils.YmdByObject(--)));
+                }
+                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        Pageable pageable = new PageRequest(page - 1, pageSize, sort);
+
+        Page<${className}Entity> entityPage = ${classname}Repository.findAll(querySpecification, pageable);
+        Map<String, Object> map = new HashMap<>();
+        List<${className}Entity> list = new ArrayList<>();
+        for (${className}Entity entity : entityPage) {
+            list.add(entity);
         }
-        List<${className}VO> voList = new ArrayList<>();
-        if(map.get("planFidList") != null && !("0").equals(map.get("planFidList").toString())){
-            List<PlanPlaninfoInfo> planList = feignPlanService.selectByCondition((List<Integer>) map.get("planFidList"));
-            ${classname}Biz.planListInfo(planList, voList);
-        }
-        if (map.get("unPlanFidList") != null && !("0").equals(map.get("unPlanFidList").toString())){
-            List<PlanUnifiedplanInfo> unPlanList = feignPlanService.selectCondition((List<Integer>) map.get("unPlanFidList"));
-            ${classname}Biz.listUnPlanInfo(unPlanList,voList);
-        }
-        map.put("voList", voList);
+        map.put("list", list);
+        map.put("total", entityPage.getTotalElements());
         return map;
     }
 

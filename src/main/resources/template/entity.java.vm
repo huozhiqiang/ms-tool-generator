@@ -1,15 +1,14 @@
-package ${package}.entity;
+package
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.io.Serializable;
 import javax.persistence.Entity;
-import java.util.Date;
-import javax.persistence.*;
-import java.math.BigDecimal;
+import java.io.Serializable;
+
+${package}.entity;
 
 
 /**
@@ -18,11 +17,10 @@ import java.math.BigDecimal;
  * @Author: ${author}
  * @Date: ${datetime}
  */
-@Data
 @Entity
 @Table(name = "${tableName}")
 @ApiModel(value="${comments}参数", description = "${comments}参数描述")
-public class ${className} implements Serializable {
+public class ${className}Entity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -33,6 +31,9 @@ public class ${className} implements Serializable {
      * $column.comments
      */
     @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid")
+    @Column(length=32)
     @ApiModelProperty(value="$column.comments")
     private $column.attrType $column.attrname;
 	#else
@@ -44,6 +45,7 @@ public class ${className} implements Serializable {
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 #end
     @Column(name = "$column.columnName")
+##    @Field(value = "$column.columnName")
     @ApiModelProperty(value="$column.comments")
     private $column.attrType $column.attrname;
 	#end

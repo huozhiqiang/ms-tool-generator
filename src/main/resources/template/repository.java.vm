@@ -1,0 +1,24 @@
+package
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+import java.io.Serializable;
+
+${package}.repository;
+
+/**
+ * ${comments}
+ *
+ * @Author: ${author}
+ * @Date: ${datetime}
+ */
+@Component
+public interface ${className}Repository extends JpaRepository<${className}Entity, Serializable>, JpaSpecificationExecutor {
+
+    /**
+     *根据主键查询
+     */
+    ${className}Entity findById(String id);
+
+}

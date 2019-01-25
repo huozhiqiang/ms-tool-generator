@@ -20,6 +20,7 @@ import java.util.zip.ZipOutputStream;
  */
 @Service
 public class GeneratorService {
+
 	@Autowired
 	private GeneratorMapper generatorMapper;
 
