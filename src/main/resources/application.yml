@@ -10,7 +10,7 @@ spring:
     datasource:
         type: com.alibaba.druid.pool.DruidDataSource
         driverClassName: com.mysql.jdbc.Driver
-        # ms_equity表示需要生成代码的url和数据库名字
+        # king_db表示需要生成代码的url和数据库名字
         url: jdbc:mysql://127.0.0.1:3306/king_db?useUnicode=true&characterEncoding=UTF-8&useSSL=false
         username: root
         password: root
