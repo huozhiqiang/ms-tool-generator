@@ -1,7 +1,7 @@
 package com.yss.ms.generator.rest;
 
 import com.alibaba.fastjson.JSON;
-import com.yss.ms.common.msg.TableResultResponse;
+import com.yss.ms.generator.response.TableResultResponse;
 import com.yss.ms.generator.service.GeneratorService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
